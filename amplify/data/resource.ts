@@ -11,6 +11,16 @@ const schema = a.schema({
     .model({
       content: a.string(),
     }).authorization(allow => [allow.owner()]),
+
+  Recipe: a
+      .model({
+        title: a.string().required(),
+        ingredients: a.string().array().required(),
+        instructions: a.string().required(),
+        source: a.string().required(),
+        imageUrl: a.string(),
+        language: a.string()
+      }).authorization(allow => [allow.owner()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
