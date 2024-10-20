@@ -76,7 +76,7 @@ const saveRecipe = async () => {
     }) as Readonly<Record<string, any>>;
     await DataStore.save(newRecipe);
 
-    client.models.Recipe.create({content: newRecipe}).then(() => {
+    client.models.Recipe.create(newRecipe).then(() => {
       console.log('Recipe created to backend successfully');})
     console.log('Recipe saved successfully');
     emit('saved');
