@@ -39,17 +39,15 @@ function createTodo() {
     <button @click="createTodo">+ new</button>
     <ul>
       <li
-          v-for="todo in todos"
-          :key="todo.id"
-          @click="deleteTodo(todo.id)"
-      >
+        v-for="todo in todos"
+        :key="todo.id">
         {{ todo.content }}
       </li>
     </ul>
     <div>
       🥳 App successfully hosted. Try creating a new todo.
       <br />
-      <a href="https://docs.amplify.aws/vue/start/quickstart/">
+      <a href="https://docs.amplify.aws/gen2/start/quickstart/nextjs-pages-router/">
         Review next steps of this tutorial.
       </a>
     </div>

@@ -67,17 +67,24 @@ const saveError = ref('');
 
 const saveRecipe = async () => {
   try {
-    const newRecipe = new Recipe({
+    // Создаем новый объект Recipe с правильными полями
+    const newRecipeData = {
       title: props.recipe.translatedTitle || props.recipe.title,
       ingredients: [...props.recipe.usedIngredients, ...props.recipe.missedIngredients].map(ing => ing.name),
       instructions: props.recipe.translatedInstructions || props.recipe.instructions || 'Instructions not available',
       source: `https://spoonacular.com/recipes/${props.recipe.id}`,
       imageUrl: props.recipe.image,
-    }) as Readonly<Record<string, any>>;
-    await DataStore.save(newRecipe);
+    };
 
-    client.models.Recipe.create(newRecipe).then(() => {
-      console.log('Recipe created to backend successfully');})
+    // Сохраняем в DataStore
+    const savedRecipe = await DataStore.save(new Recipe(newRecipeData));
+
+    // Создаем запись на сервере через client.models
+    await client.models.Recipe.create({
+      id: savedRecipe.id,  // Используем ID, который присваивает DataStore
+      ...newRecipeData,
+    });
+
     console.log('Recipe saved successfully');
     emit('saved');
     emit('close');

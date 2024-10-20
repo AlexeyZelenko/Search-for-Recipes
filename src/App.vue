@@ -27,6 +27,21 @@ onMounted(() => {
             <h1 class="text-3xl font-bold text-gray-900">Hello {{ user?.username }}'s todos</h1>
             <!-- Вывод списка задач -->
             <Todos />
+            <!-- Навигация по страницам -->
+            <div class="my-6">
+              <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <h1 class="text-3xl font-bold text-gray-900">Recipe Finder</h1>
+                <nav class="mt-4">
+                  <router-link to="/" class="mr-4 text-gray-900 hover:text-blue-700">Search Recipes</router-link>
+                  <router-link to="/saved" class="text-gray-900 hover:text-blue-700">Saved Recipes</router-link>
+                </nav>
+              </div>
+            </div>
+
+            <!-- Router View для отображения соответствующего компонента в зависимости от маршрута -->
+            <div>
+              <router-view></router-view>
+            </div>
             <!-- Кнопка для выхода из системы -->
             <button @click="signOut" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
               Sign Out
@@ -35,22 +50,6 @@ onMounted(() => {
         </div>
       </template>
     </Authenticator>
-
-    <!-- Навигация по страницам -->
-    <div class="my-6">
-      <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold text-gray-900">Recipe Finder</h1>
-        <nav class="mt-4">
-          <router-link to="/" class="mr-4 text-gray-900 hover:text-blue-700">Search Recipes</router-link>
-          <router-link to="/saved" class="text-gray-900 hover:text-blue-700">Saved Recipes</router-link>
-        </nav>
-      </div>
-    </div>
-
-    <!-- Router View для отображения соответствующего компонента в зависимости от маршрута -->
-    <div>
-      <router-view></router-view>
-    </div>
   </main>
 </template>
 
