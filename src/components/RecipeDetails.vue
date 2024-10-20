@@ -36,9 +36,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 import { DataStore } from '@aws-amplify/datastore';
 import { Recipe } from '@/models';
+
+import type { Schema } from '../../amplify/data/resource';
+import { generateClient } from 'aws-amplify/data';
+const client = generateClient<Schema>();
 
 interface RecipeProps {
   id: number;
@@ -71,6 +75,9 @@ const saveRecipe = async () => {
       imageUrl: props.recipe.image,
     }) as Readonly<Record<string, any>>;
     await DataStore.save(newRecipe);
+
+    client.models.Recipe.create({content: newRecipe}).then(() => {
+      console.log('Recipe created to backend successfully');})
     console.log('Recipe saved successfully');
     emit('saved');
     emit('close');

@@ -117,7 +117,7 @@ const searchRecipes = async () => {
       params: {
         ingredients: translatedIngredients,
         apiKey: import.meta.env.VITE_SPOONACULAR_API_KEY,
-        number: 10
+        number: 3
       }
     });
 
