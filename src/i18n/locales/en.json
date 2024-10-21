@@ -16,7 +16,8 @@
     "loading": "Searching...",
     "noResults": "No recipes found.",
     "error": "An error occurred while searching for recipes.",
-    "Search": "Search"
+    "Search": "Search",
+    "searchResults": "Search Results"
   },
   "recipe": {
     "ingredients": "Ingredients",

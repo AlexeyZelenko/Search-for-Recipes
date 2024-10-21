@@ -27,9 +27,9 @@
     <div v-if="error" class="text-red-500 mt-4">{{ error }}</div>
 
     <div v-if="recipes.length > 0" class="mt-8">
-      <h2 class="text-2xl font-bold mb-4">Search Results</h2>
+      <h2 class="text-2xl font-bold mb-4">{{$t('search.searchResults')}}</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div v-for="recipe in paginatedRecipes" :key="recipe.id" class="border rounded p-4">
+        <div v-for="recipe in paginatedRecipes" :key="recipe.id" class="border rounded p-4 flex flex-col justify-between">
           <h3 class="text-xl font-semibold mb-2">{{ recipe.translatedTitle || recipe.title }}</h3>
           <img :src="recipe.image" :alt="recipe.title" class="w-full h-48 object-cover mb-4"/>
           <button
