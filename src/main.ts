@@ -6,6 +6,7 @@ import outputs from "../amplify_outputs.json";
 import router from './router'
 import { DataStore } from '@aws-amplify/datastore';
 
+
 Amplify.configure(outputs);
 
 const app = createApp(App);

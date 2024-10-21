@@ -1,7 +1,7 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema.js';
 
-const { Recipe, Project } = initSchema(schema);
+const { Recipe } = initSchema(schema);
 
 export {
   Recipe,

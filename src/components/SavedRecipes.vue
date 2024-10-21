@@ -12,7 +12,6 @@
           <strong>Instructions:</strong>
           <span v-html="recipe.instructions"></span>
         </p>
-        <!--                <a :href="recipe.source" target="_blank" class="text-blue-500 hover:text-blue-700">View Source</a>-->
         <button
             @click="deleteRecipe(recipe)"
             class="mt-2 px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
@@ -26,20 +25,48 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
-import {DataStore} from '@aws-amplify/datastore';
-import {Recipe} from '@/models';
+import { onMounted, ref, onBeforeUnmount } from 'vue';
+// import { DataStore } from '@aws-amplify/datastore';
+import { Recipe } from '@/models';
+import type { Schema } from '../../amplify/data/resource';
+import { generateClient } from 'aws-amplify/data';
 
+
+const client = generateClient<Schema>();
 const recipes = ref<Recipe[]>([]);
 const loading = ref(true);
 const error = ref('');
 
-const fetchSavedRecipes = async () => {
+const fetchSavedRecipes = () => {
   try {
-    recipes.value = await DataStore.query(Recipe);
+    const subscription = client.models.Recipe.observeQuery().subscribe({
+      next: ({ items }) => {
+        // Используем any, чтобы обойти проверку типов
+        const validItems = items.filter((item: any) => !item._deleted);
+
+        recipes.value = validItems.map(item => {
+          console.log('Item:', item)
+          const { createdAt, updatedAt, ...rest } = item;
+          return new Recipe({
+            ...rest,
+            ingredients: rest.ingredients?.filter((ing): ing is string => ing !== null) ?? []
+          });
+        }) as Recipe[];
+
+        console.log('Fetched recipes:', recipes.value);
+      },
+      error: (err) => {
+        console.error('Subscription error fetching saved recipes:', err);
+        error.value = 'Failed to fetch saved recipes. Please try again.';
+      }
+    });
+
+    onBeforeUnmount(() => {
+      subscription.unsubscribe();
+    });
   } catch (err) {
-    console.error('Error fetching saved recipes:', err);
-    error.value = 'Failed to fetch saved recipes. Please try again.';
+    console.error('Error initializing subscription to fetch recipes:', err);
+    error.value = 'Failed to initialize recipe fetching. Please try again.';
   } finally {
     loading.value = false;
   }
@@ -47,19 +74,19 @@ const fetchSavedRecipes = async () => {
 
 const deleteRecipe = async (recipe: Recipe) => {
   try {
-    await DataStore.delete(recipe);
-    console.log('Recipe deleted successfully');
-    // Remove the deleted recipe from the local state
-    recipes.value = recipes.value.filter(r => r.id !== recipe.id);
-  } catch (err) {
-    console.error('Error deleting recipe:', err);
+    console.log('Deleting recipe:', recipe.id);
+
+    const input = { id: recipe.id };
+    const { data: deletedRecipe, errors } = await client.models.Todo.delete(input);
+    console.log('Deleted recipe:', deletedRecipe);
+  } catch (errors) {
     error.value = 'Failed to delete recipe. Please try again.';
   }
 };
 
+
 onMounted(async () => {
   try {
-    await DataStore.start();
     await fetchSavedRecipes();
   } catch (err) {
     console.error('Error initializing DataStore:', err);

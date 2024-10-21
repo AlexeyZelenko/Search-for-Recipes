@@ -11,6 +11,7 @@ export declare class Recipe {
     readonly instructions: string;
     readonly imageUrl?: string;
     readonly source: string;
+    readonly _deleted?: boolean | null;
     readonly createdAt?: string | null;
     readonly updatedAt?: string | null;
     constructor(init: ModelInit<Recipe>);
