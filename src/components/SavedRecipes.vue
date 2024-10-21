@@ -37,13 +37,6 @@ const recipes = ref<Recipe[]>([]);
 const loading = ref(true);
 const error = ref('');
 
-// const fetchRecipes = async () => {
-//   const { data: items, errors } = await client.models.Recipe.list();
-//   console.log('Fetched recipes:', items);
-//   recipes.value = items;
-//   loading.value = false;
-// }
-
 const fetchSavedRecipes = () => {
   try {
     const subscription = client.models.Recipe.observeQuery().subscribe({
@@ -83,12 +76,18 @@ const deleteRecipe = async (recipe: Recipe) => {
   try {
     console.log('Deleting recipe:', recipe.id);
 
-    const input = { id: recipe.id };
-    const { data: deletedRecipe, errors } = await client.models.Recipe.delete(input);
-    console.log('Deleted recipe:', deletedRecipe);
-    // await fetchRecipes();
+    // Perform the deletion
+    await client.models.Recipe.delete({ id: recipe.id });
+
+    console.log('Recipe deleted successfully');
+
+    // Remove the deleted recipe from the local state immediately
+    recipes.value = recipes.value.filter(r => r.id !== recipe.id);
+
+    // Refresh the list from the backend to make sure it's in sync
     fetchSavedRecipes();
-  } catch (errors) {
+  } catch (err) {
+    console.error('Failed to delete recipe:', err);
     error.value = 'Failed to delete recipe. Please try again.';
   } finally {
     loading.value = false;
@@ -96,9 +95,9 @@ const deleteRecipe = async (recipe: Recipe) => {
 };
 
 
+
 onMounted(() => {
   try {
-    // fetchRecipes();
     fetchSavedRecipes();
   } catch (err) {
     console.error('Error initializing DataStore:', err);

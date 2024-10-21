@@ -81,9 +81,9 @@ const saveRecipe = async () => {
 
     // Используем созданный объект для сохранения
     const newRecipe = new Recipe(newRecipeData);
-    // await DataStore.save(newRecipe);
+    await DataStore.save(newRecipe);
 
-    await client.models.Recipe.create(newRecipe);
+    // await client.models.Recipe.create(newRecipe);
 
     emit('saved');
     emit('close');
