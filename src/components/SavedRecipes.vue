@@ -18,6 +18,12 @@
         >
           Delete Recipe
         </button>
+        <button
+            @click="deleteRecipe2(recipe)"
+            class="mt-2 px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
+        >
+          Delete Recipe2
+        </button>
       </div>
     </div>
     <div v-else-if="!loading" class="mt-4">No saved recipes found.</div>
@@ -30,6 +36,35 @@ import { onMounted, ref, onBeforeUnmount } from 'vue';
 import { Recipe } from '@/models';
 import type { Schema } from '../../amplify/data/resource';
 import { generateClient } from 'aws-amplify/data';
+
+
+const deleteRecipe2 = async (recipe: Recipe) => {
+  try {
+    console.log('Checking if recipe exists before deleting:', recipe.id);
+
+    const existingRecipe = recipes.value.find(r => r.id === recipe.id);
+
+    if (!existingRecipe) {
+      console.log('Recipe not found, skipping deletion');
+      return;
+    }
+
+    console.log('Deleting recipe:', recipe.id);
+
+    // Удаление рецепта
+    await client.models.Recipe.delete({ id: recipe.id });
+
+    console.log('Recipe deleted successfully');
+
+    // Обновляем локальное состояние
+    recipes.value = recipes.value.filter(r => r.id !== recipe.id);
+  } catch (err) {
+    console.error('Failed to delete recipe:', err);
+    error.value = 'Failed to delete recipe. Please try again.';
+  } finally {
+    loading.value = false;
+  }
+};
 
 
 const client = generateClient<Schema>();
