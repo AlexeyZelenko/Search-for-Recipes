@@ -67,7 +67,6 @@ const saveError = ref('');
 
 const saveRecipe = async () => {
   try {
-    // Преобразуем `id` в строку, если необходимо
     const newRecipeId = String(props.recipe.id);
 
     // Создаем новый объект Recipe, исключая лишние или несовместимые поля
@@ -77,18 +76,15 @@ const saveRecipe = async () => {
       instructions: props.recipe.translatedInstructions || props.recipe.instructions || 'Instructions not available',
       source: `https://spoonacular.com/recipes/${props.recipe.id}`,
       imageUrl: props.recipe.image,
-      id: newRecipeId // Преобразованный в строку идентификатор
+      id: newRecipeId
     };
 
     // Используем созданный объект для сохранения
     const newRecipe = new Recipe(newRecipeData);
-    await DataStore.save(newRecipe);
+    // await DataStore.save(newRecipe);
 
-    client.models.Recipe.create(newRecipe).then(() => {
-      console.log('Recipe created to backend successfully');
-    });
+    await client.models.Recipe.create(newRecipe);
 
-    console.log('Recipe saved successfully');
     emit('saved');
     emit('close');
   } catch (err) {

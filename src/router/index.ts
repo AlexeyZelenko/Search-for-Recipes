@@ -1,6 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import RecipeSearch from '../components/RecipeSearch.vue'
 import SavedRecipes from '../components/SavedRecipes.vue'
+import Todos from '../components/Todos.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +15,11 @@ const router = createRouter({
             path: '/saved',
             name: 'saved-recipes',
             component: SavedRecipes
+        },
+        {
+            path: '/todos',
+            name: 'todos',
+            component: Todos
         }
     ]
 })

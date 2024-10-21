@@ -37,6 +37,13 @@ const recipes = ref<Recipe[]>([]);
 const loading = ref(true);
 const error = ref('');
 
+// const fetchRecipes = async () => {
+//   const { data: items, errors } = await client.models.Recipe.list();
+//   console.log('Fetched recipes:', items);
+//   recipes.value = items;
+//   loading.value = false;
+// }
+
 const fetchSavedRecipes = () => {
   try {
     const subscription = client.models.Recipe.observeQuery().subscribe({
@@ -77,17 +84,22 @@ const deleteRecipe = async (recipe: Recipe) => {
     console.log('Deleting recipe:', recipe.id);
 
     const input = { id: recipe.id };
-    const { data: deletedRecipe, errors } = await client.models.Todo.delete(input);
+    const { data: deletedRecipe, errors } = await client.models.Recipe.delete(input);
     console.log('Deleted recipe:', deletedRecipe);
+    // await fetchRecipes();
+    fetchSavedRecipes();
   } catch (errors) {
     error.value = 'Failed to delete recipe. Please try again.';
+  } finally {
+    loading.value = false;
   }
 };
 
 
-onMounted(async () => {
+onMounted(() => {
   try {
-    await fetchSavedRecipes();
+    // fetchRecipes();
+    fetchSavedRecipes();
   } catch (err) {
     console.error('Error initializing DataStore:', err);
     error.value = 'Failed to initialize the application. Please try again.';
