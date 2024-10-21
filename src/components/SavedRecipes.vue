@@ -4,104 +4,62 @@
     <div v-if="loading" class="mt-4">Loading...</div>
     <div v-if="error" class="mt-4 text-red-500">{{ error }}</div>
     <div v-if="recipes.length > 0" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div v-for="recipe in recipes" :key="recipe.id" class="border rounded p-4">
+      <div v-for="recipe in paginatedRecipes" :key="recipe.id" class="border rounded p-4">
         <h3 class="text-xl font-semibold mb-2">{{ recipe.title }}</h3>
         <img v-if="recipe.imageUrl" :src="recipe.imageUrl" :alt="recipe.title" class="w-full h-48 object-cover mb-4" />
-        <p class="mb-2"><strong>Ingredients:</strong> {{ recipe.ingredients.join(', ') }}</p>
-        <p class="mb-2">
-          <strong>Instructions:</strong>
-          <span v-html="recipe.instructions"></span>
-        </p>
+        <router-link :to="{ name: 'saved-recipe-details', params: { id: recipe.id } }" class="text-blue-500 hover:text-blue-700 mb-2 block">
+          View Details
+        </router-link>
         <button
             @click="deleteRecipe(recipe)"
             class="mt-2 px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
         >
           Delete Recipe
         </button>
-        <button
-            @click="deleteRecipe2(recipe)"
-            class="mt-2 px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
-        >
-          Delete Recipe2
-        </button>
       </div>
     </div>
     <div v-else-if="!loading" class="mt-4">No saved recipes found.</div>
+
+    <div v-if="recipes.length > 0" class="mt-4 flex justify-center">
+      <button
+          v-for="page in totalPages"
+          :key="page"
+          @click="currentPage = page"
+          class="mx-1 px-3 py-1 border rounded"
+          :class="{ 'bg-blue-500 text-white': currentPage === page }"
+      >
+        {{ page }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, onBeforeUnmount } from 'vue';
-// import { DataStore } from '@aws-amplify/datastore';
-import { Recipe } from '@/models';
-import type { Schema } from '../../amplify/data/resource';
-import { generateClient } from 'aws-amplify/data';
+import { ref, computed, onMounted } from 'vue';
+import { DataStore } from '@aws-amplify/datastore';
+import { Recipe } from '../models';
 
-
-const deleteRecipe2 = async (recipe: Recipe) => {
-  try {
-    console.log('Checking if recipe exists before deleting:', recipe.id);
-
-    const existingRecipe = recipes.value.find(r => r.id === recipe.id);
-
-    if (!existingRecipe) {
-      console.log('Recipe not found, skipping deletion');
-      return;
-    }
-
-    console.log('Deleting recipe:', recipe.id);
-
-    // Удаление рецепта
-    await client.models.Recipe.delete({ id: recipe.id });
-
-    console.log('Recipe deleted successfully');
-
-    // Обновляем локальное состояние
-    recipes.value = recipes.value.filter(r => r.id !== recipe.id);
-  } catch (err) {
-    console.error('Failed to delete recipe:', err);
-    error.value = 'Failed to delete recipe. Please try again.';
-  } finally {
-    loading.value = false;
-  }
-};
-
-
-const client = generateClient<Schema>();
 const recipes = ref<Recipe[]>([]);
 const loading = ref(true);
 const error = ref('');
+const currentPage = ref(1);
+const itemsPerPage = 3;
 
-const fetchSavedRecipes = () => {
+const paginatedRecipes = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return recipes.value.slice(start, end);
+});
+
+const totalPages = computed(() => Math.ceil(recipes.value.length / itemsPerPage));
+
+const fetchSavedRecipes = async () => {
   try {
-    const subscription = client.models.Recipe.observeQuery().subscribe({
-      next: ({ items }) => {
-        // Используем any, чтобы обойти проверку типов
-        const validItems = items.filter((item: any) => !item._deleted);
-
-        recipes.value = validItems.map(item => {
-          console.log('Item:', item)
-          const { createdAt, updatedAt, ...rest } = item;
-          return new Recipe({
-            ...rest,
-            ingredients: rest.ingredients?.filter((ing): ing is string => ing !== null) ?? []
-          });
-        }) as Recipe[];
-
-        console.log('Fetched recipes:', recipes.value);
-      },
-      error: (err) => {
-        console.error('Subscription error fetching saved recipes:', err);
-        error.value = 'Failed to fetch saved recipes. Please try again.';
-      }
-    });
-
-    onBeforeUnmount(() => {
-      subscription.unsubscribe();
-    });
+    const savedRecipes = await DataStore.query(Recipe);
+    recipes.value = savedRecipes;
   } catch (err) {
-    console.error('Error initializing subscription to fetch recipes:', err);
-    error.value = 'Failed to initialize recipe fetching. Please try again.';
+    console.error('Error fetching saved recipes:', err);
+    error.value = 'Failed to fetch saved recipes. Please try again.';
   } finally {
     loading.value = false;
   }
@@ -109,31 +67,22 @@ const fetchSavedRecipes = () => {
 
 const deleteRecipe = async (recipe: Recipe) => {
   try {
-    console.log('Deleting recipe:', recipe.id);
-
-    // Perform the deletion
-    await client.models.Recipe.delete({ id: recipe.id });
-
+    await DataStore.delete(recipe);
     console.log('Recipe deleted successfully');
-
-    // Remove the deleted recipe from the local state immediately
     recipes.value = recipes.value.filter(r => r.id !== recipe.id);
-
-    // Refresh the list from the backend to make sure it's in sync
-    fetchSavedRecipes();
+    if (paginatedRecipes.value.length === 0 && currentPage.value > 1) {
+      currentPage.value--;
+    }
   } catch (err) {
-    console.error('Failed to delete recipe:', err);
+    console.error('Error deleting recipe:', err);
     error.value = 'Failed to delete recipe. Please try again.';
-  } finally {
-    loading.value = false;
   }
 };
 
-
-
-onMounted(() => {
+onMounted(async () => {
   try {
-    fetchSavedRecipes();
+    await DataStore.start();
+    await fetchSavedRecipes();
   } catch (err) {
     console.error('Error initializing DataStore:', err);
     error.value = 'Failed to initialize the application. Please try again.';

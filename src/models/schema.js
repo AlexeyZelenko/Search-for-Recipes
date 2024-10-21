@@ -54,8 +54,8 @@ export const schema = {
           "attributes": [],
           "isReadOnly": true
         },
-        "imageURL": {
-          "name": "imageURL",
+        "imageUrl": {
+          "name": "imageUrl",
           "isArray": false,
           "type": "String",
           "isRequired": false,

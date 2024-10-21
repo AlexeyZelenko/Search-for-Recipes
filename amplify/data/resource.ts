@@ -21,7 +21,10 @@ const schema = a.schema({
         instructions: a.string().required(),
         source: a.string().required(),
         imageUrl: a.string(),
-        language: a.string()
+        language: a.string(),
+        _version: a.string(),
+        _lastChangedAt: a.string(),
+        _deleted: a.boolean(),
       })
       .authorization((allow) => [allow.publicApiKey()]),
 });
