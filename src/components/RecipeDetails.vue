@@ -83,7 +83,7 @@ const saveRecipe = async () => {
     const newRecipe = new Recipe(newRecipeData);
     await DataStore.save(newRecipe);
 
-    // await client.models.Recipe.create(newRecipe);
+    client.models.Recipe.create(newRecipeData);
 
     emit('saved');
     emit('close');

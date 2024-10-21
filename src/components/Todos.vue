@@ -21,7 +21,8 @@ function createTodo() {
   const content = window.prompt("Enter the new todo content:");
   if (content) {
     client.models.Todo.create({
-      content
+      content,
+      isDone: false
     }).then(() => {
       listTodos();
     });
