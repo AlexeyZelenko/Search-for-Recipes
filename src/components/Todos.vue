@@ -3,6 +3,9 @@ import '@/assets/main.css';
 import { onMounted, ref } from 'vue';
 import type { Schema } from '../../amplify/data/resource';
 import { generateClient } from 'aws-amplify/data';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const client = generateClient<Schema>();
 
@@ -57,21 +60,21 @@ onMounted(() => {
 
 <template>
   <main class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6 text-center">My Todos</h1>
+    <h1 class="text-3xl font-bold mb-6 text-center">{{t('todos.title')}}</h1>
     <div class="flex justify-center mb-8">
       <button @click="createTodo" class="bg-blue-500 text-white px-6 py-2 rounded shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
-        + New Todo
+        {{t('todos.addTodo')}}
       </button>
     </div>
     <ul class="space-y-4">
       <li v-for="todo in todos" :key="todo.id" class="flex justify-between items-center p-4 bg-gray-100 rounded shadow">
-        <span class="text-lg">{{ todo.content }}</span>
+        <div class="text-lg mr-2">{{ todo.content }}</div>
         <div class="flex space-x-4">
           <button @click="editTodo(todo)" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400">
-            Edit
+            {{t('todos.editTodo')}}
           </button>
           <button @click="deleteTodo(todo.id)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400">
-            Delete
+            {{t('todos.deleteTodo')}}
           </button>
         </div>
       </li>

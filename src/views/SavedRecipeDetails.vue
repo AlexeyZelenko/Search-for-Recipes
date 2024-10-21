@@ -11,17 +11,17 @@
           class="w-full max-w-md h-auto object-cover mb-4 rounded-lg shadow-md"
       />
 
-      <p class="mb-2"><strong>Ingredients:</strong></p>
+      <p class="mb-2"><strong>{{ t('recipe.ingredients')}}:</strong></p>
       <ul class="list-disc list-inside mb-4">
         <li v-for="(ingredient, index) in recipe.ingredients" :key="index">{{ ingredient }}</li>
       </ul>
 
-      <p class="mb-2"><strong>Instructions:</strong></p>
+      <p class="mb-2"><strong>{{ t('recipe.instructions')}}:</strong></p>
       <p class="mb-4 whitespace-pre-line">{{ recipe.instructions }}</p>
     </div>
     <div class="mt-8">
       <router-link to="/saved" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Back to Saved Recipes
+        {{ t('savedRecipes.backToList')}}
       </router-link>
     </div>
   </div>
@@ -32,6 +32,9 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { DataStore } from '@aws-amplify/datastore';
 import { Recipe } from '../models';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const route = useRoute();
 const recipe = ref<Recipe | null>(null);

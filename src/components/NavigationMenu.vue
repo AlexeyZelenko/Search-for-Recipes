@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const router = useRouter();
 const route = useRoute();
 
 const navigation = ref([
-  { name: 'Search Recipes', href: '/', current: false },
-  { name: 'Saved Recipes', href: '/saved', current: false },
-  { name: 'Todos', href: '/todos', current: false },
+  { name: 'nav.search', href: '/', current: false },
+  { name: 'nav.saved', href: '/saved', current: false },
+  { name: 'nav.todos', href: '/todos', current: false },
 ]);
 
 // Обновляем активный пункт навигации
@@ -35,7 +38,7 @@ updateCurrentNavigation();
         :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'rounded-md px-3 py-2 text-sm font-medium']"
         :aria-current="item.current ? 'page' : undefined"
     >
-      {{ item.name }}
+      {{ t(item.name) }}
     </router-link>
   </div>
 </template>

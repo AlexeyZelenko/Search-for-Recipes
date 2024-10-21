@@ -1,0 +1,53 @@
+{
+  "app": {
+    "title": "Recipe Finder",
+    "language": "Language"
+  },
+  "nav": {
+    "search": "Search Recipes",
+    "saved": "Saved Recipes",
+    "todos": "Todos",
+    "SignOut": "Sign Out"
+  },
+  "search": {
+    "title": "Recipe Search",
+    "placeholder": "Enter ingredients (comma separated)",
+    "button": "Search",
+    "loading": "Searching...",
+    "noResults": "No recipes found.",
+    "error": "An error occurred while searching for recipes.",
+    "Search": "Search"
+  },
+  "recipe": {
+    "ingredients": "Ingredients",
+    "usedingredients:": "Used Ingredients",
+    "missingsngredients:": "Missing Ingredients",
+    "instructions": "Instructions",
+    "viewDetails": "View Details",
+    "saveRecipe": "Save Recipe",
+    "viewSource": "View Original Source",
+    "language": "Language",
+    "close": "Close"
+  },
+  "savedRecipes": {
+    "title": "Saved Recipes",
+    "noRecipes": "No saved recipes found.",
+    "deleteRecipe": "Delete Recipe",
+    "backToList": "Back to Saved Recipes"
+  },
+  "errors": {
+    "fetchFailed": "Failed to fetch recipes. Please try again.",
+    "saveFailed": "Failed to save recipe. Please try again.",
+    "deleteFailed": "Failed to delete recipe. Please try again.",
+    "initFailed": "Failed to initialize the application. Please try again."
+  },
+  "todos": {
+      "title": "Todos",
+      "noTodos": "No todos found.",
+      "addTodo": "Add Todo",
+      "saveTodo": "Save Todo",
+      "editTodo": "Edit Todo",
+      "deleteTodo": "Delete Todo",
+      "backToList": "Back to Todos"
+  }
+}

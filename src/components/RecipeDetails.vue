@@ -6,13 +6,13 @@
         <div class="mt-2 px-7 py-3">
           <img :src="recipe.image" :alt="recipe.translatedTitle || recipe.title" class="w-full h-48 object-cover mb-4" />
           <p class="text-sm text-gray-500">
-            <strong>Used Ingredients:</strong> {{ recipe.translatedUsedIngredients || recipe.usedIngredients.map(ing => ing.name).join(', ') }}
+            <strong>{{t('recipe.ingredients')}}:</strong> {{ recipe.translatedUsedIngredients || recipe.usedIngredients.map(ing => ing.name).join(', ') }}
           </p>
           <p class="text-sm text-gray-500">
-            <strong>Missing Ingredients:</strong> {{ recipe.translatedMissedIngredients || recipe.missedIngredients.map(ing => ing.name).join(', ') }}
+            <strong>{{t("recipe.ingredients")}}:</strong> {{ recipe.translatedMissedIngredients || recipe.missedIngredients.map(ing => ing.name).join(', ') }}
           </p>
           <p class="text-sm text-gray-500 mt-2">
-            <strong>Instructions:</strong> {{ recipe.translatedInstructions || recipe.instructions || 'No instructions available' }}
+            <strong>{{t("recipe.instructions")}}:</strong> {{ recipe.translatedInstructions || recipe.instructions || 'No instructions available' }}
           </p>
         </div>
         <div class="items-center px-4 py-3">
@@ -21,13 +21,13 @@
               @click="saveRecipe"
               class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
           >
-            Save Recipe
+            {{t('recipe.saveRecipe')}}
           </button>
           <button
               @click="$emit('close')"
               class="mt-3 px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
           >
-            Close
+            {{t('recipe.close')}}
           </button>
         </div>
       </div>
@@ -43,6 +43,10 @@ import { Recipe } from '@/models';
 import type { Schema } from '../../amplify/data/resource';
 import { generateClient } from 'aws-amplify/data';
 const client = generateClient<Schema>();
+
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 interface RecipeProps {
   id: number;

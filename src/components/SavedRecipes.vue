@@ -4,17 +4,21 @@
     <div v-if="loading" class="mt-4">Loading...</div>
     <div v-if="error" class="mt-4 text-red-500">{{ error }}</div>
     <div v-if="recipes.length > 0" class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div v-for="recipe in paginatedRecipes" :key="recipe.id" class="border rounded p-4">
+      <div
+          v-for="recipe in paginatedRecipes"
+          :key="recipe.id"
+          class="flex flex-col justify-between border rounded p-4"
+      >
         <h3 class="text-xl font-semibold mb-2">{{ recipe.title }}</h3>
         <img v-if="recipe.imageUrl" :src="recipe.imageUrl" :alt="recipe.title" class="w-full h-48 object-cover mb-4" />
         <router-link :to="{ name: 'saved-recipe-details', params: { id: recipe.id } }" class="text-blue-500 hover:text-blue-700 mb-2 block">
-          View Details
+          {{ t('recipe.viewDetails')}}
         </router-link>
         <button
             @click="deleteRecipe(recipe)"
             class="mt-2 px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-300"
         >
-          Delete Recipe
+          {{ t('savedRecipes.deleteRecipe')}}
         </button>
       </div>
     </div>
@@ -38,6 +42,9 @@
 import { ref, computed, onMounted } from 'vue';
 import { DataStore } from '@aws-amplify/datastore';
 import { Recipe } from '../models';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const recipes = ref<Recipe[]>([]);
 const loading = ref(true);

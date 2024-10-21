@@ -1,11 +1,11 @@
 <template>
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-4">Recipe Search</h1>
+  <div class="container mx-auto px-2 py-8">
+    <h1 class="text-3xl font-bold mb-4">{{ $t('search.title') }}</h1>
     <div class="mb-4">
       <input
           v-model="ingredients"
           type="text"
-          placeholder="Enter ingredients (comma separated)"
+          :placeholder="$t('search.placeholder')"
           class="w-full p-2 border rounded"
       />
     </div>
@@ -21,7 +21,7 @@
         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         :disabled="loading"
     >
-      {{ loading ? 'Searching...' : 'Search' }}
+      {{ loading ? $t('search.loading') : $t('search.Search') }}
     </button>
 
     <div v-if="error" class="text-red-500 mt-4">{{ error }}</div>
@@ -36,7 +36,7 @@
               @click="showRecipeDetails(recipe)"
               class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           >
-            View Details
+            {{ $t('recipe.viewDetails') }}
           </button>
         </div>
       </div>
