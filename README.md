@@ -1,26 +1,96 @@
-## AWS Amplify Vue.js Starter Template
+# Recipe Finder Application
 
-This repository provides a starter template for creating applications using Vue.js and AWS Amplify, emphasizing easy setup for authentication, API, and database capabilities.
-
-## Overview
-
-This template equips you with a foundational Vue application integrated with AWS Amplify, streamlined for scalability and performance. It is ideal for developers looking to jumpstart their project with pre-configured AWS services like Cognito, AppSync, and DynamoDB.
+A modern web application built with Vue.js and AWS Amplify that helps users discover and save recipes in multiple languages.
 
 ## Features
 
-- **Authentication**: Setup with Amazon Cognito for secure user authentication.
-- **API**: Ready-to-use GraphQL endpoint with AWS AppSync.
-- **Database**: Real-time database powered by Amazon DynamoDB.
+- **Recipe Search**: Search for recipes by ingredients
+- **Multilingual Support**: 
+  - Interface in English, Russian, and Ukrainian
+  - Recipe translation using DeepL API
+- **Save & Manage**: Save favorite recipes and manage them in your personal collection
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **AWS Integration**: Powered by AWS Amplify for robust backend functionality
 
-## Deploying to AWS
+## Tech Stack
 
-For detailed instructions on deploying your application, refer to the [deployment section](https://docs.amplify.aws/vue/start/quickstart/#deploy-a-fullstack-app-to-aws) of our documentation.
+- **Frontend**: Vue.js 3 with TypeScript
+- **State Management**: Vue Composition API
+- **Styling**: Tailwind CSS
+- **Backend**: AWS Amplify
+- **Database**: Amazon DynamoDB
+- **Authentication**: Amazon Cognito
+- **API**: AWS AppSync (GraphQL)
+- **Translation**: DeepL API
+- **Recipe Data**: Spoonacular API
 
+## Getting Started
 
-## Security
+1. Clone the repository
+2. Install dependencies:
+```bash
+npm install
+```
 
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+3. Set up environment variables:
+Create a `.env` file with:
+```
+VITE_SPOONACULAR_API_KEY=your_spoonacular_api_key
+VITE_DEEPL_API_KEY=your_deepl_api_key
+```
+
+4. Start the development server:
+```bash
+npm run dev
+```
+
+## Project Structure
+
+```
+src/
+├── components/        # Reusable Vue components
+├── views/            # Page components
+├── models/           # Data models for AWS Amplify
+├── utils/           # Utility functions
+├── i18n/            # Internationalization files
+└── assets/          # Static assets
+```
+
+## Features in Detail
+
+### Recipe Search
+- Search recipes by ingredients
+- View recipe details including ingredients and instructions
+- Translate recipes to preferred language
+
+### Saved Recipes
+- Save favorite recipes
+- View saved recipes offline
+- Delete unwanted recipes
+- Organize recipes by language
+
+### Multilingual Support
+- Interface available in:
+  - English
+  - Russian
+  - Ukrainian
+- Recipe translation to multiple languages
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
 
 ## License
 
-This library is licensed under the MIT-0 License. See the LICENSE file.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- AWS Amplify team for the excellent backend framework
+- Vue.js team for the fantastic frontend framework
+- Spoonacular for the recipe API
+- DeepL for the translation API
